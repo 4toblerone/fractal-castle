@@ -15,7 +15,7 @@ import os
 def index():
 
     # PhotoProject.objects(projectKey = "probaprojekat")[0].delete()
-    #citaj iz configa koji ce key biti
+    #put projectkey in config 
     indexproject =  PhotoProject.objects.get(projectKey="indexphotos")
     key1= indexproject.photos[0].photoKey
     for photo in indexproject.photos:
@@ -44,7 +44,7 @@ def login():
 
     form1 = LoginForm()
     if form1.validate_on_submit():
-        # proveri ovde korisnika...
+        # check if user with that credentials exists
         user = User.objects.get(username=form1.username.data, password=form1.password.data)
         if user:
             login_user(user)
@@ -224,7 +224,6 @@ def sortPhotosProjects(pplist):
 
 def returnPPPhotosUrls(projectKey):
 
-    #bucket = s3.get_bucket("fractalcastle")
     listofphotokeys = [projectKey + "/" + photo.photoKey
                        for photo in sorted(
                        PhotoProject.objects.get(projectKey=projectKey).photos,

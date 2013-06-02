@@ -48,7 +48,7 @@ $("#btncreate").click(function(){
     success: function(data){
         if(data.result==false){
             alert("vec postoji")
-            //stavi data.result u neki lep DIV 
+            //put result in some awesome DIV
         }
         else{
         $("#project").append("<option value='"+data.projectkey+"'>"+data.projectname+"</option>");
@@ -66,7 +66,7 @@ var updateids = function(){
   });
 };
 
-
+//saves edited data of certain project
 $("#btnedit").click(function(){
   var selected = new Array();
   $('ul li input:checked').each(function() {
