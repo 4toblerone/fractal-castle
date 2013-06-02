@@ -1,0 +1,22 @@
+{%extends "base.html"%}
+
+{%block content%}
+    <h1>Sign In</h1>
+    <form action="" method="post" name="logining" >
+        {{formcreate.hidden_tag()}}
+        <p>
+            Username <br>
+            {{formcreate.username(size=80)}}<br>
+        </p>
+        <p>
+            Password<br>
+            {{formcreate.password(size=80)}}<br>
+        </p>
+        <p>
+            Img upload:
+            {{formcreate.photo}}
+        </p>
+
+        <p><input type="submit" value="Sign In"> </p>
+    </form>
+{%endblock%}

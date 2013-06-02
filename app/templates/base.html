@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <script type=text/javascript src="{{
+  url_for('static', filename='jquery.js') }}"></script>
+   <script src="{{
+  url_for('static', filename='jquery-ui.js') }}"></script>
+  </head>
+  <body>
+   <!-- <div>Microblog: <a href="/index">Home</a></div>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+      {% for message in messages %}
+       <li>{{message}}</li>
+       {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}-->
+    {% block content %}
+    {% endblock %}
+  </body>
+</html>

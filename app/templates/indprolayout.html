@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Fractal Castle</h1>
+{% block projectlist %}
+{% for project in projectList %}
+<a href = "{{url_for('project' , projectKey = project.projectKey) }}"> {{project.name}} </a> <br>
+{% endfor %}
+{% endblock %} 
+{% block display %}
+{% endblock %}
+{% endblock %}

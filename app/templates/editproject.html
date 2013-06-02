@@ -1,0 +1,54 @@
+{% extends "base.html"%}
+{% block content %}
+<script>
+  $(document).ready(function() {
+    $( "#sortable" ).sortable(); 
+    $( "#sortable" ).disableSelection();
+    $("#btnSave").click(function(){
+    	$.ajax({
+    		type: "GET",
+    		url: "/saveeditedproject",
+    		contentType: "application/json; charset=utf-8",
+    		data: {'redosled': $( "#sortable" ).sortable('toArray').toString(), 
+                    'name' :  },
+    		success: function(data){
+    			$('#result').text(data.value);
+    		}
+
+    	});
+    });
+  });
+
+
+  $("#btnSave").click(function(){
+                $.ajax({
+                type: "GET",
+                url: "/saveeditedproject",
+                contentType: "application/json; charset=utf-8",
+                data: {'redosled': $( "#sortable" ).sortable('toArray').toString(), 
+                        'name' : "name" },
+                success: function(data){
+                    $('#result').text(data.value);
+                }});
+ </script>
+
+<div> Project name </div>
+<br>
+<div id="projectname">{{photoProject.name}}</div>
+<br>
+<div> Description</div>
+<div id="projectdescription">{{photoProject.description}}</div>
+<ul id="sortable">
+	{%for photourl in photosUrl %}
+		<li id={{loop.index}}>
+			<img src = {{photourl}} width="200" height="150"> </img>
+		</li>
+	{% endfor %}
+</ul>
+<br>
+<br>
+<button type="button" id="btnSave" name="btnSave">Zapamti promene</button>
+<br>
+<br>
+<div id='result'></div>
+{%endblock%}

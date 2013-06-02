@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content%}
+
+ <form action = "" method = "post" id ="create" name = "create" enctype="multipart/form-data">
+		{{form.hidden_tag()}}
+ 		<p> New project name</p><br>
+ 		{{form.projectName(size = 40)}}<br>
+ 		
+ 		<p>Description</p><br>
+ 		{{form.description(size = 40)}}<br>
+
+ 	<p><input type="submit" value="Create new project"> </p>
+
+ </form>
+
+{% endblock %}
