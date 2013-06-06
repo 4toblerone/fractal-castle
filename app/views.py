@@ -96,6 +96,7 @@ def admin():
         keyname = projectkey + "/" + photoName.replace(" ", "").lower()
         key = Key(bucket)
         key.key = keyname
+        key.set_metadata("Content-Type", 'image/jpeg')
         key.set_contents_from_file(uploadedphoto)
         #creting new Photo instance and adding it to parent PhotoProject
         newphoto = Photo(photoKey=photoName.replace(" ", "").lower(), name=photoName, placeNumber=placeNumber)
