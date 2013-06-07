@@ -3,7 +3,8 @@
 <h1>Fractal Castle</h1>
 {% block projectlist %}
 {% for project in projectList %}
-<a href = "{{url_for('project' , projectKey = project.projectKey) }}"> {{project.name}} </a> <br>
+<!--<a href = "{{url_for('project' , projectKey = project.projectKey) }}"> {{project.name}} </a> <br>-->
+<a href = "{{url_for('project' , projectKey = project) }}"> {{project}} </a> <br>
 {% endfor %}
 {% endblock %} 
 {% block display %}

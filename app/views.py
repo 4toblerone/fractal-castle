@@ -1,40 +1,62 @@
 from flask import render_template, flash, redirect, session, url_for, request, g, jsonify
 from app import app
 from forms import LoginForm, PhotoUpload, CreateProject
-from models import Photo, User, PhotoProject
-from app import db, app, lm, s3 , bucket
+#from models import Photo, User, PhotoProject
+from app import  app, lm #, s3 , bucket,db 
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from boto.s3.key import Key
 import inspect
 import boto
 import os
 
+#dummy projekti koji imaju razlicite velicine fotki
+projects = {
+            'Pun format' : [
+                            'http://farm9.staticflickr.com/8296/7857226524_d7381c7dbf_c.jpg' , 
+                            'http://farm9.staticflickr.com/8294/7857427448_d842800292_c.jpg',
+                            'http://farm9.staticflickr.com/8438/7857192870_745da574d1_c.jpg',
+                            'http://farm9.staticflickr.com/8429/7859132504_cd05845e38_c.jpg'
+                            ],
+            'Fotke u kvadratu': [
+                            'http://farm8.staticflickr.com/7209/7002056850_f615a5eac1.jpg',
+                            'http://farm8.staticflickr.com/7208/7148183061_25814c5d06_z.jpg',
+                            'http://farm8.staticflickr.com/7223/7328385650_2415b5b61a_z.jpg'
+                            ],
+            'Drugi format' : [
+                            'http://farm9.staticflickr.com/8032/8012715219_4aac2cb3e7_c.jpg',
+                            'http://farm9.staticflickr.com/8029/8068710787_57c4e3b3c3_c.jpg',
+                            'http://farm9.staticflickr.com/8321/8015169295_a8d9ab8c25_c.jpg'
+                            ]
+                            }
+
+def dummyprojectlist():
+    return projects.keys()
 
 @app.route('/')
 @app.route('/index')
 def index():
 
-    # PhotoProject.objects(projectKey = "probaprojekat")[0].delete()
     #put projectkey in config 
-    indexproject =  PhotoProject.objects.get(projectKey="indexphotos")
+    """indexproject =  PhotoProject.objects.get(projectKey="indexphotos")
     key1= indexproject.photos[0].photoKey
     for photo in indexproject.photos:
         if photo.photoKey == 1:
             key1 = photo.photoKey
 
     key = bucket.get_key("indexphotos" + "/" + key1)
-    imgurl = key.generate_url(3600, query_auth=False, force_http=True)
+    imgurl = key.generate_url(3600, query_auth=False, force_http=True)"""
+    imgurl = 'http://farm9.staticflickr.com/8212/8413626781_bf8aef50e8_c.jpg'
     return render_template("index.html", title='Home',
-                           imgurl=imgurl, projectList=returnPublishedProjects())
+                           imgurl=imgurl, projectList = dummyprojectlist()) #projectList=returnPublishedProjects())
 
 
 @app.route('/project/<projectKey>')
 def project(projectKey):
 
-    return render_template("project.html", photosUrl=returnPPPhotosUrls(projectKey), 
-                            projectList=returnPublishedProjects())
+    return render_template("project.html", photosUrl= projects[projectKey], #returnPPPhotosUrls(projectKey), 
+                            projectList= dummyprojectlist())#returnPublishedProjects())
 
-
+"""
 @app.before_request
 def before_request():
     g.user = current_user
@@ -78,13 +100,12 @@ def logout():
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
-    form_upload = PhotoUpload()
-    """PhotoProject(projectKey="noviprojekat",
+    form_upload = PhotoUpload()""""""PhotoProject(projectKey="noviprojekat",
                  name="Novi projekat",
                  description="opis drugog projekta",
                  publish=False,
                  placeNumber=2).save()"""
-    listOfProjects = PhotoProject.objects
+"""    listOfProjects = PhotoProject.objects
     print listOfProjects
     if form_upload.validate_on_submit():
         #extracting photo related data from request
@@ -238,4 +259,4 @@ def returnPPPhotosUrls(projectKey):
 
 
 def returnPublishedProjects():
-    return [project for project in PhotoProject.objects if project.published == True]
+    return [project for project in PhotoProject.objects if project.published == True]"""
