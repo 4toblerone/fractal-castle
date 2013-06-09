@@ -56,6 +56,14 @@ def project(projectKey):
     return render_template("project.html", photosUrl= projects[projectKey], #returnPPPhotosUrls(projectKey), 
                             projectList= dummyprojectlist())#returnPublishedProjects())
 
+@app.route('/admin' )
+def admin():
+    form_upload = PhotoUpload()
+    if form_upload.validate_on_submit():
+        pass
+    return render_template('photoupload.html' , form = form_upload , listOfProjects = dummyprojectlist())
+
+
 """
 @app.before_request
 def before_request():

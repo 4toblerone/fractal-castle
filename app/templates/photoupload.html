@@ -9,7 +9,7 @@
 	<p>List of projects:</p>
   <p><select name="project" id="project" >
    {% for project in listOfProjects%}
-   <option value={{project.projectKey}} > {{project.name}}</option>
+   <option <!--value={{project.projectKey}} --> > project<!--{{project.name}}--></option>
    {% endfor %}
  </select></p>
 
@@ -73,13 +73,13 @@
 <div id="changedata"> Promeni podatke </div><br>
 <div id="admin-data">
   <div> Novo korisnicko ime :</div>
-  <input type="text" id="newusername" value={{g.user.username}} /> <br>
+  <input type="text" id="newusername" /> <br>
   <div>Trenutna sifra :</div> 
   <input type="password" id ="oldpass" /><br>
   <div> Nova sifra :</div>
   <input type="password" id= "newpass" /><br>
   <div>Email</div>
-  <input type="text" id="newemail" value={{g.user.email}} /><br>
+  <input type="text" id="newemail"  /><br>
   <input type="button" id="saveuser" >Sacuvaj nove podatke</button>
 </div>
 
@@ -87,4 +87,8 @@
 
 <!--<input type="file" id="fileToUpload"/><br/>
 <div id="progressbar"></div>
-<button id="upload_btn">Start Uploading</button>-->
+<button id="upload_btn">Start Uploading</button>
+
+<input type="text" id="newusername"  value=  {{g.user.username}} /> <br>
+<input type="text" id="newemail" <!--value={{g.user.email}} --> /><br>
+-->
