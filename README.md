@@ -27,3 +27,8 @@ Install previously metioned dependecies. Position your self again in your projec
 
 After this your enviroment should be all set. 
 
+To run project position yourself in project folder and type in (for Win users) flask\Scripts\python run.py or 
+(for OSX users) $ flask/bin/python run.py 
+
+To access it from your browser go to localhost:5000/index or just localhost:5000/
+
