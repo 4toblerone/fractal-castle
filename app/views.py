@@ -28,7 +28,7 @@ def index():
                            imgurl=imgurl, projectList=returnPublishedProjects())
 
 
-@app.route('/project/<projectKey>')
+@app.route('/<projectKey>')
 def project(projectKey):
 
     return render_template("project.html", photosUrl=returnPPPhotosUrls(projectKey), 

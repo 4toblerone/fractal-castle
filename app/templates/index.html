@@ -1,7 +1,13 @@
 {% extends "indprolayout.html" %}
 
 {% block display %}
- <img style="position:absolute; width:762px; height:506px;  top:50%; left:50%; margin:-268px auto auto -400px; text-align:center;" src = {{imgurl}} ></img>
+<div class="photo-wrapper">
+	<!-- <div class="photo-nav">
+		<a href="">prev</a>
+		<a href="">next</a>
+	</div> -->
+	<img src = {{imgurl}} ></img>
+</div>
 {% endblock %}
 
 <!--{% for post in posts %}

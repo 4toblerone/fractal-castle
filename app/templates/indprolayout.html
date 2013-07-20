@@ -1,10 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Fractal Castle</h1>
-{% block projectlist %}
+
+<nav class="clearfix">
+<!-- <h1>Fractal Castle</h1> -->
+
+<ul>
+	
+		{% block projectlist %}
 {% for project in projectList %}
-<a href = "{{url_for('project' , projectKey = project.projectKey) }}"> {{project.name}} </a> <br>
-{% endfor %}
+<li><a href = "{{url_for('project' , projectKey = project.projectKey) }}"> {{project.name}} </a></li>
+{% endfor %}	
+<li class="active"><a href = '#'> stockholm snapshots</a></li>
+<li><a href = '#'> ride the storm</a></li>
+<li><a href = '#'> tetris is past</a></li>
+<li class="contact"><a href = '#'> contact</a></li>	
+<li class="contact-content">
+	<a href="#"><img src="{{url_for('static', filename='tw.png') }}"></a>
+	<a href="#"><img src="{{url_for('static', filename='face.png') }}"></a>
+	<a href="#"><img src="{{url_for('static', filename='gm.png') }}"></a>
+</li>
+</ul>
+</nav>
+
 {% endblock %} 
 {% block display %}
 {% endblock %}
