@@ -1,19 +1,38 @@
 $(document).ready(
  function(){
- 			
+
+var newproject = $('#newproject');
+var admindata = $('#admindata');
+var edtpro =$()
+
 $('#newproject').hide();
+$("#admindata").hide();
+$('#upload').hide();
+$('#edtpro').hide();
 $("#progressbar").progressbar();
 $("#progressbar").hide();
-
+$("#indexprojects").hide();
 $("#sortproject").sortable()
 $( "#sortable" ).sortable(); 
 $( "#sortable" ).disableSelection();
 $("#project").prepend("<option value='' selected='selected'></option>");
 
+$("#changedata").click(function(){
+  alert("nesto se desava");
+$("#admindata").toggle('slow');
+
+});
 $("#btnnewproject").click(function(){
   $('#newproject').toggle('slow');
 });
+$("#uploadphoto").click(function(){
+  $('#upload').toggle('slow');
+});
 
+$("#editproject").click(function(){
+  $('#edtpro').toggle('slow');
+  $("#editproject").fadeTo(0, 1);
+});
 // when project is selected from dropdown list
 // it fills html input with project properties data
 $('#project').change(function(){
@@ -93,7 +112,7 @@ $("#btnedit").click(function(){
 
 //returns list of projects shown on index/project page
 $("#editindex").click(function(){
-  alert("pozvao je edit")
+  alert("pozvao je edit");                                                      
   $('#sortproject').empty();
   $.ajax({
     type: "GET",
@@ -103,11 +122,12 @@ $("#editindex").click(function(){
       $("#sortproject").append(data.projectlist);
       }
   });
-
+  $("#indexprojects").toggle('slow');
 });
 
 //saves new order of projects which are shown on index/project page
 $("#btnsaveeditindex").click(function(){
+  alert("sejv je pokusan");
   $.ajax({
     type: "GET" ,
     url: "/saveeditedindex" ,

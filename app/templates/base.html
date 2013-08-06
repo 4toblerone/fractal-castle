@@ -1,36 +1,21 @@
 <html>
   <head>
+    {% block head %}
     <link rel="stylesheet" href="{{url_for('static', filename='style.css') }}">
     <link href='http://fonts.googleapis.com/css?family=Wire+One' rel='stylesheet' type='text/css'>
 
     <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
    <script src="{{url_for('static', filename='jquery-ui.js') }}"></script>
    <script src="{{url_for('static', filename='custom.js') }}"></script>
+    {% endblock%}
   </head>
   <body>
-   <!-- <div>Microblog: <a href="/index">Home</a></div>
-    <hr>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul>
-      {% for message in messages %}
-       <li>{{message}}</li>
-       {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}-->
     <div class="container clearfix">
       <header class="clearfix">
-        <h1><span>fractal</span>castle</h1>
-        <!-- <ul>
-          <li><a href="#">projects</a></li>
-          <li><a href="#">contact</a></li>
-        </ul> -->
-      <div class="photo-nav">
-        <a href=""> < prev</a>
-        <a href="">next > </a>
-      </div>
-      </header> 
+        <h1><a href="/"><span>fractal</span>castle</a></h1>
+      {% block pronav %}
+      {% endblock %}
+      </header>  
     {% block content %}
     {% endblock %}
     </div>

@@ -38,6 +38,8 @@ a{
 	font-size: 11px;
 }
 
+
+
 a:hover{
 	color: gray;
 }
@@ -52,12 +54,17 @@ header{
 	margin: 55px 0px 20px 0px;
 }
 
-header h1{
-	float: left;
-	margin: 0px;
-	font-size: 16px;
-	font-weight: 200;
-	color: #3e3e3e;
+header h1 a{
+        text-transform:lowercase;
+        float: left;
+        margin: 0px;
+        font-size: 16px;
+        font-weight: 200;
+        color: #3e3e3e;
+}
+
+header h1 a:hover{
+        color: #3e3e3e;
 }
 
 header h1 span{
@@ -71,6 +78,7 @@ header h1 span{
 
 .photo-nav a{
 	margin-left: 10px;
+
 }
 
 body{
@@ -126,4 +134,37 @@ nav ul li.contact-content a img:hover{
 	float: left;
 	text-align: center;
 	width: 800px;
+	position: relative;
 }
+
+
+.photo{
+position: absolute;
+top: 0;
+left: 0;
+display: none;
+}
+
+.photocurrent{
+position: absolute;
+top: 0;
+left: 0;
+}
+
+.adminmeni{
+	opacity: 0.5;
+}
+.adminmeni:hover{
+opacity: 1;
+}
+
+.adminpart{
+	margin: 30px;
+	padding: 30px;
+	border-width: thin;
+	border-style: solid;
+    border-color: gray;
+	
+}
+
+nav 

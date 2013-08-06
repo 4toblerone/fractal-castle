@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, session, url_for, request, g, jsonify
+from flask import render_template, flash, redirect, session, url_for, request, g, jsonify, make_response
 from app import app
 from forms import LoginForm, PhotoUpload, CreateProject
 from models import Photo, User, PhotoProject
@@ -8,7 +8,7 @@ from boto.s3.key import Key
 import inspect
 import boto
 import os
-
+import json
 
 @app.route('/')
 @app.route('/index')
@@ -25,14 +25,21 @@ def index():
     key = bucket.get_key("indexphotos" + "/" + key1)
     imgurl = key.generate_url(3600, query_auth=False, force_http=True)
     return render_template("index.html", title='Home',
-                           imgurl=imgurl, projectList=returnPublishedProjects())
+                           imgurl=imgurl, projectList=sortPhotosProjects(returnPublishedProjects()))
+    #response = make_response(render_template("index.html", title='Home',imgurl=imgurl, projectList=returnPublishedProjects()))
+    #response.headers['proba'] = "reci nesto"
+    #return response
 
 
-@app.route('/<projectKey>')
+@app.route('/project/<projectKey>')
 def project(projectKey):
-
-    return render_template("project.html", photosUrl=returnPPPhotosUrls(projectKey), 
-                            projectList=returnPublishedProjects())
+    print "putanja"
+    print request.path
+    print request.endpoint
+    photos = returnPPPhotosUrls(projectKey)
+    dump =json.dumps(photos)
+    return render_template("project.html", dump = dump, photosUrl=returnPPPhotosUrls(projectKey), 
+                            projectList=sortPhotosProjects(returnPublishedProjects()))
 
 
 @app.before_request
@@ -106,8 +113,10 @@ def admin():
 
 
 @app.route('/returnproject', methods=['GET'])
+@login_required
 def returnproject():
-
+    #this should be refactored so that only give list of photos urls
+    #so the rest of the element injection should happen on javascript side
     projectkey = request.args.get('projectkey')
     project = PhotoProject.objects.get(projectKey=projectkey)
     listofphotourls = returnPPPhotosUrls(projectkey)
@@ -122,6 +131,7 @@ def returnproject():
                     "ispublished": project.published})
 
 @app.route('/returnindex' , methods=['GET'])
+@login_required
 def returnindex():
     htmlprlist=""
     #listofphotourls = returnPPPhotosUrls("indexphotos")
@@ -132,9 +142,24 @@ def returnindex():
     return jsonify({"projectlist":htmlprlist})
 
 @app.route('/saveeditedindex' , methods=['GET', 'POST'])
+@login_required
 def saveeditedindex():
+
+    print "nesto se desava"
     newprojectsorder = [int(x) for x in request.args.get('newprorder').split(',')]
+    print newprojectsorder
+
+    print "posle sortiranja"
+    print enumerate(sortPhotosProjects(PhotoProject.objects))
+    print "pocetak"
+    for project in PhotoProject.objects:
+        print project.projectKey
+        print project.placeNumber
+    print "kraj"
     for index, project in enumerate(sortPhotosProjects(PhotoProject.objects)):
+        print "trenutni broj "+str(project.placeNumber)+": novi broj "+ str(newprojectsorder.index(project.placeNumber) + 1)
+        #print newprojectsorder.index(project.placeNumber) + 1
+        project.placeNumber = newprojectsorder.index(project.placeNumber) + 1
         project.save()
     #send message about success 
     return jsonify({})
@@ -143,14 +168,16 @@ def saveeditedindex():
 #PhotoProject.objects(projectKey = "indexphotos" , photos__placeNumber=photonumber).update_one(set__photos__S__placeNumber=1)	
 
 @app.route('/saveeditedproject', methods=['GET'])
+@login_required
 def saveeditedproject():
-
     projectkey = request.args.get('projectkey')
     project = PhotoProject.objects.get(projectKey=projectkey)
+    
     neworder = [int(x) for x in request.args.get('neworder').split(',')]
     photostodelete = []
     if not request.args.get('photostodelete').strip()=="":
         photostodelete = [int(x) for x in request.args.get('photostodelete').split(',')]
+
     project.name = request.args.get('newname')
     project.description = request.args.get('newdescription')
     project.published = True if request.args.get('publish') == "true" else False
@@ -170,6 +197,7 @@ def saveeditedproject():
 
 
 @app.route('/createnewproject', methods=['GET'])
+@login_required
 def createnewproject():
     projectname = request.args.get('projectname')
     projectKey = projectname.replace(" ", "").lower()
@@ -190,6 +218,7 @@ def createnewproject():
                     "message": "project is successfully saved"})
 
 @app.route('/saveediteduser' , methods=['GET'])
+@login_required
 def saveediteduser():
     #check if typed in pass is the current pass
     #save edited user
@@ -238,3 +267,5 @@ def returnPPPhotosUrls(projectKey):
 
 def returnPublishedProjects():
     return [project for project in PhotoProject.objects if project.published == True]
+
+

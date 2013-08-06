@@ -1,10 +1,14 @@
 {% extends "base.html"%}
-{%block content%}
+{% block head %}
+{{super()}}
 <script type="text/javascript" src="{{url_for('static', filename='admin.js') }}"></script>
+{% endblock %}
+{%block content%}
 
-<button type="button" id="btnedit" name="btnedit">Zapamti promene</button>
 
-<div id="editproject">
+
+<h1 id="editproject" class="adminmeni">Edit project</h1>
+<div id ="edtpro" class="adminpart">
 
 	<p>List of projects:</p>
   <p><select name="project" id="project" >
@@ -13,32 +17,33 @@
    {% endfor %}
  </select></p>
 
- <div> Project key</div><br>
+ <p> Project key</p><br>
  <label id="projectkey"></label>
- <div> Project name </div><br>
+ <p> Project name </p><br>
  <input type="text" name="projectname" id="projectname" ><br>
 
- <div> Description</div>
+ <p> Description</p>
  <input type="text" name="description" id="description" ><br>
 
- <div>Publish</div>
+ <p>Publish</p>
  <input type="checkbox" id="ispublished" /><br>
+ 
  <ul id="sortable">
-
  </ul>
-
+ <button type="button" id="btnedit" name="btnedit">Zapamti promene</button>
  <br>
+ 
  <div id='result'></div>
-</div>
 
-<div id="uploadphoto">
-	<h1> Upload photo </h1>
-	<form action ="" method="post"  name="upload" enctype="multipart/form-data">
+<h4 id="uploadphoto"> Upload photo </h4>
+
+<div id="upload">
+	<form action ="" method="post" class="adminpart" name="upload" enctype="multipart/form-data">
 		{{form.hidden_tag()}}
 		<input type="hidden" id="hiddenkey" name="hiddenkey" val=""/>		
 		<p>
 			Photo name <br>
-			{{form.photoName(size = 80)}}<br>
+			{{form.photoName(size = 35)}}<br>
 		</p>
 		<p>
 			Photo <br>
@@ -48,30 +53,36 @@
 	</form>
 </div>
 
-<div id="btnnewproject">
- <p>Create new project</p>
 </div>
 
-<div id="newproject">
+<div >
+ <h1 id="btnnewproject" class="adminmeni">Create new project</h1>
+</div>
+
+<div id="newproject" class="adminpart">
 	<div> Project name </div><br>
 	<input type="text" id="newprname" name="newprname" ><br>
 	<div> Description </div>
-	<input type="text" id="newprdescription" name="description"><br>
+	<input type="textarea" id="newprdescription" name="description">
   <div>Objavi</div>
-  <input type="checkbox" id="publish" /><br>
+  <input type="checkbox" id="publish" /><br><br>
 	<button type= "button" id="btncreate" name="btnCreate"> Kreiraj novi projekat</button>
 </div>
 
-<div id="editindex">Edit index</div>
-<div>
+<div id="editindex">
+	<h1 class="adminmeni">Edit index</h1>
+</div>
+<div id="indexprojects" class="adminpart">
   <ul id="sortproject">
   </ul>
-  <button type="button" id="btnsaveeditindex">Zapamti Index stranu</button><br><br>
+  <button type="button" name"btnsaveeditindex" id="btnsaveeditindex">Zapamti Index stranu</button>
 </div>
 
 
-<div id="changedata"> Promeni podatke </div><br>
-<div id="admin-data">
+<div id="changedata"> 
+	<h1 id="adminmeni" class="adminmeni">Change admin data </h1>
+</div><br>
+<div id="admindata" class="adminpart">
   <div> Novo korisnicko ime :</div>
   <input type="text" id="newusername" value={{g.user.username}} /> <br>
   <div>Trenutna sifra :</div> 

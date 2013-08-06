@@ -1,11 +1,11 @@
-from flask.ext.wtf import Form, TextField, BooleanField, FileField
+from flask.ext.wtf import Form, TextField, BooleanField, FileField,PasswordField
 from flask.ext.wtf import Required
 
 
 class LoginForm(Form):
     username = TextField('username' , validators = [Required()])
     #remember_me = BooleanField('remember_me' , default = False)
-    password = TextField('password' , validators = [Required()])
+    password = PasswordField('password' , validators = [Required()])
 
     photo = FileField("Your photo")
 

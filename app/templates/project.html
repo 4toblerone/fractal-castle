@@ -1,9 +1,85 @@
 {% extends "indprolayout.html" %}
-{% block display %}
-{%for photourl in photosUrl %}
-<div class="photo-wrapper">
-<img src = {{photourl}} > </img>
-</div>
-{% endfor %}
+{% block head %}
+{{super()}}
+<script type="text/javascript">
+$(document).ready(function(){
+Object.size = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
+	
+	$("#prev").fadeTo(0, 0.15);	
+	var current = 0;
+	var niz = {{photosUrl|safe}}//niz url-ova fotki
+	var size = Object.size(niz);
+	var trigger= true;
+	var trigger2= false;
+	var next = $("#next");
+	var prev = $("#prev");
+	
+	next.click(function(event){
+		if(current < size-1){
+			if(trigger){
+				prev.fadeTo(0, 1);
+				trigger=false;
+			}
+		current++
+		//$("#photo"+current).attr('class' , 'photocurrent');
+		//$("#photo"+(current-1)).attr('class' , 'photo');
+		$("#photo"+(current-1)).hide();
+		$("#photo"+current).delay(200).fadeIn(150);
+		if(current==size-1){
+				next.fadeTo(0, 0.15);
+				trigger2=true;
+			}
+		
+		}
+	event.preventDefault();
+	});
 
-{%endblock%}wi
+	$("#prev").click(function(event){
+		if(current > 0){
+			if(trigger2){
+				next.fadeTo(0,1);
+				trigger2=false;
+			}
+			current--;
+			//$("#photo"+current).attr('class' , 'photocurrent');
+			//$("#photo"+(current+1)).attr('class' , 'photo');
+			$("#photo"+(current+1)).hide();
+		$("#photo"+current).delay(200).fadeIn(150);
+			if(current==0){
+				prev.fadeTo(0, 0.15);
+				trigger=true;
+			}
+		}
+		event.preventDefault();
+	});
+
+});
+</script>
+{% endblock %}
+      {% block pronav %}
+      <div class="photo-nav">
+      	
+        <a id="prev" href="#"> < prev</a>
+        <a id="next" href="#">next > </a>
+    </div>
+      {% endblock %}
+{% block display %}
+<div class="photo-wrapper">
+	<div id="photoholder" style='position: relative'>
+		<img id="photo0" class="photocurrent" src ={{photosUrl[0]}} > </img>
+		{% for url in photosUrl[1:]%}
+		<img id='photo{{loop.index}}' src="{{url}}" class="photo" ></img>
+		{% endfor %}
+	</div>
+</div>
+<ul>
+ <li></li>
+</ul>
+
+{%endblock%}

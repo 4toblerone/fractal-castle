@@ -1,10 +1,7 @@
-$(function() {
-
-	// $("li").on('click', function(){
- //    	$("li.contact-content").hide();
- //    });
-
-    $("li.contact").on('click', function(){
-    	$("li.contact-content").fadeIn();
+$(document).ready(
+ function(){
+    $("#contact").on('click', function(event){
+    	$("#contact-content").fadeToggle();
+    	event.preventDefault();
     });
 });

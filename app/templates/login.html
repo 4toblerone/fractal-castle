@@ -6,17 +6,12 @@
         {{formcreate.hidden_tag()}}
         <p>
             Username <br>
-            {{formcreate.username(size=80)}}<br>
+            {{formcreate.username(size=35)}}<br>
         </p>
         <p>
             Password<br>
-            {{formcreate.password(size=80)}}<br>
+            {{formcreate.password(size=35)}}<br>
         </p>
-        <p>
-            Img upload:
-            {{formcreate.photo}}
-        </p>
-
         <p><input type="submit" value="Sign In"> </p>
     </form>
 {%endblock%}

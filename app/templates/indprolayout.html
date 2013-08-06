@@ -6,17 +6,14 @@
 
 <ul>
 	
-		{% block projectlist %}
+{% block projectlist %}
 {% for project in projectList %}
-<li><a href = "{{url_for('project' , projectKey = project.projectKey) }}"> {{project.name}} </a></li>
+<li {% if request.path == "/project/"+project.projectKey  %} class ="active" {% endif %}><a href = "{{url_for('project' , projectKey = project.projectKey ) }}"> {{project.name}} </a></li>
 {% endfor %}	
-<li class="active"><a href = '#'> stockholm snapshots</a></li>
-<li><a href = '#'> ride the storm</a></li>
-<li><a href = '#'> tetris is past</a></li>
-<li class="contact"><a href = '#'> contact</a></li>	
-<li class="contact-content">
-	<a href="#"><img src="{{url_for('static', filename='tw.png') }}"></a>
-	<a href="#"><img src="{{url_for('static', filename='face.png') }}"></a>
+<li class="contact" id="contact"><a href = '#'> contact</a></li>	
+<li class="contact-content" id="contact-content">
+	<a href="https://twitter.com/4evertoblerone"><img src="{{url_for('static', filename='tw.png') }}"></a>
+	<a href="https://www.facebook.com/4evertoblerone"><img src="{{url_for('static', filename='face.png') }}"></a>
 	<a href="#"><img src="{{url_for('static', filename='gm.png') }}"></a>
 </li>
 </ul>
