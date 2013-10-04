@@ -28,8 +28,7 @@ def index():
 
 @app.route('/<path:projectkey>')
 def project(projectkey):
-    print "putanja"
-    print request.path
+
     photos = returnPPPhotosUrls(projectkey)
     dump =json.dumps(photos)
     return render_template("project.html", dump = dump, photosUrl=returnPPPhotosUrls(projectkey), 
@@ -47,7 +46,8 @@ def login():
     form1 = LoginForm()
     if form1.validate_on_submit():
         # check if user with that credentials exists
-        user = User.query.filter_by(username=form1.username.data, password=form1.password.data).first()
+        user = User.query.filter_by(username=form1.username.data, 
+                                    password=form1.password.data).first()
         if user:
             login_user(user)
             flash("Logged in successfully")
@@ -80,14 +80,10 @@ def logout():
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
+
     form_upload = PhotoUpload()
-    """PhotoProject(projectKey="noviprojekat",
-                 name="Novi projekat",
-                 description="opis drugog projekta",
-                 publish=False,
-                 placeNumber=2).save()"""
     listOfProjects = PhotoProject.query.all()
-    print listOfProjects
+
     if form_upload.validate_on_submit():
         #extracting photo related data from request
         photoname = form_upload.photoName.data
@@ -100,7 +96,9 @@ def admin():
         key.key = keyname
         key.set_contents_from_file(uploadedphoto)
         #creting new Photo instance and adding it to parent PhotoProject
-        newphoto = Photo(photokey=photoname.replace(" ", "").lower(), name=photoname, placenumber=placenumber, projectkey=projectkey)
+        newphoto = Photo(photokey=photoname.replace(" ", "").lower(), 
+                            name=photoname, placenumber=placenumber, 
+                                projectkey=projectkey)
         #photoproject = PhotoProject.query.filter_by(projectkey=projectkey).first()
         db.session.add(newphoto)
         db.session.commit()
@@ -115,9 +113,6 @@ def returnproject():
     #this should be refactored so that only give list of photos urls
     #so the rest of the element injection should happen on javascript side
     projectkey = request.args.get('projectkey')
-    print "ovo je key u returnproject"
-    print projectkey
-    print "ide potraga"
     project = PhotoProject.query.filter_by(projectkey=projectkey).first()
     listofphotourls = returnPPPhotosUrls(projectkey)
     portion = ""
@@ -133,38 +128,24 @@ def returnproject():
 @app.route('/returnindex' , methods=['GET'])
 @login_required
 def returnindex():
+
     htmlprlist=""
-    #listofphotourls = returnPPPhotosUrls("indexphotos")
     for index , project in enumerate(sortPhotosProjects(PhotoProject.query.all())):
         htmlprlist += "<li id="+str(index+1) +">"+project.name+"</li>"
-        print "ime projekta"
-        print project.name
     return jsonify({"projectlist":htmlprlist})
 
 @app.route('/saveeditedindex' , methods=['GET', 'POST'])
 @login_required
 def saveeditedindex():
 
-    print "nesto se desava"
     newprojectsorder = [int(x) for x in request.args.get('newprorder').split(',')]
-    print newprojectsorder
-
-    print "posle sortiranja"
-    print enumerate(sortPhotosProjects(PhotoProject.query.all()))
-    print "pocetak"
-    for project in PhotoProject.query.all():
-        print project.projectkey
-        print project.placenumber
-    print "kraj"
     for index, project in enumerate(sortPhotosProjects(PhotoProject.query.all())):
-        print "trenutni broj "+str(project.placenumber)+": novi broj "+ str(newprojectsorder.index(project.placenumber) + 1)
-        #print newprojectsorder.index(project.placeNumber) + 1
         project.placenumber = newprojectsorder.index(project.placenumber) + 1
         db.session.commit()
     #send message about success 
     return jsonify({})
 
-#proveri update!!!
+#check flasksqlalchemy updated function 
 @app.route('/saveeditedproject', methods=['GET'])
 @login_required
 def saveeditedproject():
@@ -173,7 +154,6 @@ def saveeditedproject():
     project.name = request.args.get('newname')
     project.description = request.args.get('newdescription')
     project.published = True if request.args.get('publish') == "true" else False
-    print project.published
     db.session.commit()
     
     if project.photos.count() ==0:
