@@ -8,7 +8,7 @@
 	
 {% block projectlist %}
 {% for project in projectList %}
-<li {% if request.path == "/project/"+project.projectKey  %} class ="active" {% endif %}><a href = "{{url_for('project' , projectKey = project.projectKey ) }}"> {{project.name}} </a></li>
+<li {% if request.path == "/"+project.projectkey  %} class ="active" {% endif %}><a href = "{{url_for('project' , projectkey = project.projectkey ) }}"> {{project.name}} </a></li>
 {% endfor %}	
 <li class="contact" id="contact"><a href = '#'> contact</a></li>	
 <li class="contact-content" id="contact-content">

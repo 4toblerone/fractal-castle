@@ -14,32 +14,27 @@ import json
 @app.route('/index')
 def index():
 
-    # PhotoProject.objects(projectKey = "probaprojekat")[0].delete()
     #put projectkey in config 
-    indexproject =  PhotoProject.objects.get(projectKey="indexphotos")
-    key1= indexproject.photos[0].photoKey
+    indexproject =  PhotoProject.query.filter_by(projectkey="indexphotos").first()
+    key1= indexproject.photos[0].photokey
     for photo in indexproject.photos:
-        if photo.photoKey == 1:
-            key1 = photo.photoKey
+        if photo.placenumber == 1:
+            key1 = photo.photokey
 
     key = bucket.get_key("indexphotos" + "/" + key1)
     imgurl = key.generate_url(3600, query_auth=False, force_http=True)
     return render_template("index.html", title='Home',
                            imgurl=imgurl, projectList=sortPhotosProjects(returnPublishedProjects()))
-    #response = make_response(render_template("index.html", title='Home',imgurl=imgurl, projectList=returnPublishedProjects()))
-    #response.headers['proba'] = "reci nesto"
-    #return response
 
-
-@app.route('/project/<projectKey>')
-def project(projectKey):
+@app.route('/<path:projectkey>')
+def project(projectkey):
     print "putanja"
     print request.path
-    print request.endpoint
-    photos = returnPPPhotosUrls(projectKey)
+    photos = returnPPPhotosUrls(projectkey)
     dump =json.dumps(photos)
-    return render_template("project.html", dump = dump, photosUrl=returnPPPhotosUrls(projectKey), 
+    return render_template("project.html", dump = dump, photosUrl=returnPPPhotosUrls(projectkey), 
                             projectList=sortPhotosProjects(returnPublishedProjects()))
+
 
 
 @app.before_request
@@ -52,7 +47,7 @@ def login():
     form1 = LoginForm()
     if form1.validate_on_submit():
         # check if user with that credentials exists
-        user = User.objects.get(username=form1.username.data, password=form1.password.data)
+        user = User.query.filter_by(username=form1.username.data, password=form1.password.data).first()
         if user:
             login_user(user)
             flash("Logged in successfully")
@@ -66,7 +61,7 @@ def login():
 @lm.user_loader
 def load_user(uname):
     # un  = str(username)
-    user = User.objects.get(username=uname)
+    user = User.query.filter_by(username=uname).first()
     if user:
         return user
     else:
@@ -91,24 +86,26 @@ def admin():
                  description="opis drugog projekta",
                  publish=False,
                  placeNumber=2).save()"""
-    listOfProjects = PhotoProject.objects
+    listOfProjects = PhotoProject.query.all()
     print listOfProjects
     if form_upload.validate_on_submit():
         #extracting photo related data from request
-        photoName = form_upload.photoName.data
+        photoname = form_upload.photoName.data
         uploadedphoto = request.files['photo']
         projectkey = request.form['hiddenkey']
-        placeNumber = len(PhotoProject.objects.get(projectKey = projectkey).photos) + 1
+        placenumber = PhotoProject.query.filter_by(projectkey = projectkey).first().photos.count() + 1
         #seting key and data for amazon S3
-        keyname = projectkey + "/" + photoName.replace(" ", "").lower()
+        keyname = projectkey + "/" + photoname.replace(" ", "").lower()
         key = Key(bucket)
         key.key = keyname
         key.set_contents_from_file(uploadedphoto)
         #creting new Photo instance and adding it to parent PhotoProject
-        newphoto = Photo(photoKey=photoName.replace(" ", "").lower(), name=photoName, placeNumber=placeNumber)
-        photoproject = PhotoProject.objects.get(projectKey=projectkey)
-        photoproject.photos.append(newphoto)
-        photoproject.save()
+        newphoto = Photo(photokey=photoname.replace(" ", "").lower(), name=photoname, placenumber=placenumber, projectkey=projectkey)
+        #photoproject = PhotoProject.query.filter_by(projectkey=projectkey).first()
+        db.session.add(newphoto)
+        db.session.commit()
+        #photoproject.photos.append(newphoto)
+        #photoproject.save()
     return render_template('photoupload.html' , form = form_upload , listOfProjects = listOfProjects)
 
 
@@ -118,7 +115,10 @@ def returnproject():
     #this should be refactored so that only give list of photos urls
     #so the rest of the element injection should happen on javascript side
     projectkey = request.args.get('projectkey')
-    project = PhotoProject.objects.get(projectKey=projectkey)
+    print "ovo je key u returnproject"
+    print projectkey
+    print "ide potraga"
+    project = PhotoProject.query.filter_by(projectkey=projectkey).first()
     listofphotourls = returnPPPhotosUrls(projectkey)
     portion = ""
     for index, url in enumerate(listofphotourls):
@@ -127,7 +127,7 @@ def returnproject():
     return jsonify({"listitems": portion,
                     "projectname": project.name,
                     "prdescription": project.description,
-                    "projectkey": project.projectKey,
+                    "projectkey": project.projectkey,
                     "ispublished": project.published})
 
 @app.route('/returnindex' , methods=['GET'])
@@ -135,7 +135,7 @@ def returnproject():
 def returnindex():
     htmlprlist=""
     #listofphotourls = returnPPPhotosUrls("indexphotos")
-    for index , project in enumerate(sortPhotosProjects(PhotoProject.objects)):
+    for index , project in enumerate(sortPhotosProjects(PhotoProject.query.all())):
         htmlprlist += "<li id="+str(index+1) +">"+project.name+"</li>"
         print "ime projekta"
         print project.name
@@ -150,48 +150,51 @@ def saveeditedindex():
     print newprojectsorder
 
     print "posle sortiranja"
-    print enumerate(sortPhotosProjects(PhotoProject.objects))
+    print enumerate(sortPhotosProjects(PhotoProject.query.all()))
     print "pocetak"
-    for project in PhotoProject.objects:
-        print project.projectKey
-        print project.placeNumber
+    for project in PhotoProject.query.all():
+        print project.projectkey
+        print project.placenumber
     print "kraj"
-    for index, project in enumerate(sortPhotosProjects(PhotoProject.objects)):
-        print "trenutni broj "+str(project.placeNumber)+": novi broj "+ str(newprojectsorder.index(project.placeNumber) + 1)
+    for index, project in enumerate(sortPhotosProjects(PhotoProject.query.all())):
+        print "trenutni broj "+str(project.placenumber)+": novi broj "+ str(newprojectsorder.index(project.placenumber) + 1)
         #print newprojectsorder.index(project.placeNumber) + 1
-        project.placeNumber = newprojectsorder.index(project.placeNumber) + 1
-        project.save()
+        project.placenumber = newprojectsorder.index(project.placenumber) + 1
+        db.session.commit()
     #send message about success 
     return jsonify({})
 
-
-#PhotoProject.objects(projectKey = "indexphotos" , photos__placeNumber=photonumber).update_one(set__photos__S__placeNumber=1)	
-
+#proveri update!!!
 @app.route('/saveeditedproject', methods=['GET'])
 @login_required
 def saveeditedproject():
     projectkey = request.args.get('projectkey')
-    project = PhotoProject.objects.get(projectKey=projectkey)
+    project = PhotoProject.query.filter_by(projectkey=projectkey).first()
+    project.name = request.args.get('newname')
+    project.description = request.args.get('newdescription')
+    project.published = True if request.args.get('publish') == "true" else False
+    print project.published
+    db.session.commit()
     
+    if project.photos.count() ==0:
+        return jsonify({})
+
+
     neworder = [int(x) for x in request.args.get('neworder').split(',')]
     photostodelete = []
     if not request.args.get('photostodelete').strip()=="":
         photostodelete = [int(x) for x in request.args.get('photostodelete').split(',')]
+    
 
-    project.name = request.args.get('newname')
-    project.description = request.args.get('newdescription')
-    project.published = True if request.args.get('publish') == "true" else False
-    project.save()
     for index, photo in enumerate(sortPhotosProjects(project.photos)):
-        if photo.placeNumber in photostodelete:
-            #for some reasone i can't call update_one on project which is returned via objects.get()
-            PhotoProject.objects(projectKey=projectkey).update_one(pull__photos__placeNumber = photo.placeNumber)
+        if photo.placenumber in photostodelete:
+            db.session.delete(photo)
+            db.session.commit()
             bucket.delete_key(projectkey + "/" + photo.photoKey)
-
         else:
-
-            photo.placeNumber = neworder.index(photo.placeNumber) + 1
-            project.save()
+            #think about update function
+            photo.placenumber = neworder.index(photo.placenumber) + 1
+            db.session.commit()
     #send message about success   
     return jsonify({})
 
@@ -200,19 +203,21 @@ def saveeditedproject():
 @login_required
 def createnewproject():
     projectname = request.args.get('projectname')
-    projectKey = projectname.replace(" ", "").lower()
-    if len(PhotoProject.objects(projectKey=projectKey)) > 0:
+    projectkey = projectname.replace(" ", "").lower()
+    if len(PhotoProject.query.filter_by(projectkey=projectkey).all()) > 0:
         return jsonify({"result": False,
                         "message": "project with that name/key already exists"})
     description = request.args.get('description')
     publish = True if request.args.get('publish') == "true" else False
-    placeNumber = len(PhotoProject.objects) + 1
-    PhotoProject(projectKey=projectKey,
+    placenumber = len(PhotoProject.query.all()) + 1
+    photoproject = PhotoProject(projectkey=projectkey,
                  name=projectname,
                  description=description,
-                 publish=publish,
-                 placeNumber=placeNumber).save()
-    return jsonify({"projectKey": projectKey,
+                 published=publish,
+                 placenumber=placenumber)
+    db.session.add(photoproject)
+    db.session.commit()
+    return jsonify({"projectKey": projectkey,
                     "projectname": projectname,
                     "result": True,
                     "message": "project is successfully saved"})
@@ -223,9 +228,9 @@ def saveediteduser():
     #check if typed in pass is the current pass
     #save edited user
     if g.user.password == request.args.get('oldpass'):
-        User.objects.get(username =g.user.username).update(username = request.args.get('newusername') ,
+        User.query.filter_by(username =g.user.username).update(dict(username = request.args.get('newusername') ,
                                                              password = request.args.get('newpass') , 
-                                                                email = request.args.get('newemail'))
+                                                                email = request.args.get('newemail')))
         return jsonify({"success" : "Novi podaci su uspesno sacuvani"})
     else:
         return jsonify({"success": "Trenutna sifra nije identicna unetoj"})
@@ -243,20 +248,20 @@ def returnuser():
 
 def returnProjectList():
 
-    return [project.name for project in PhotoProject.objects]
+    return [project.name for project in PhotoProject.query.all()]
 
 
 def sortPhotosProjects(pplist):
 
-    return sorted(pplist, key=lambda pplistmember: pplistmember.placeNumber)
+    return sorted(pplist, key=lambda pplistmember: pplistmember.placenumber)
 
 
 def returnPPPhotosUrls(projectKey):
-
-    listofphotokeys = [projectKey + "/" + photo.photoKey
+    
+    listofphotokeys = [projectKey + "/" + photo.photokey
                        for photo in sorted(
-                       PhotoProject.objects.get(projectKey=projectKey).photos,
-                       key=lambda photo: photo.placeNumber)]
+                       PhotoProject.query.filter_by(projectkey=projectKey).first().photos,
+                       key=lambda photo: photo.placenumber)]
     s3keys = [bucket.get_key(photokey)
               for photokey in listofphotokeys]
     listofphotourls = [s3key.generate_url(3600, query_auth=False,
@@ -266,6 +271,6 @@ def returnPPPhotosUrls(projectKey):
 
 
 def returnPublishedProjects():
-    return [project for project in PhotoProject.objects if project.published == True]
+    return [project for project in PhotoProject.query.all() if project.published == True]
 
 

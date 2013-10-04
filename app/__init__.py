@@ -1,13 +1,16 @@
 from flask import Flask
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.login import LoginManager
+from flask.ext.sqlalchemy import SQLAlchemy
 import boto
 import os
+
 
 app = Flask(__name__)
 app.config.from_object('config')
 app.config.from_envvar('FRACTALCASTLE_CONFIG')
-db = MongoEngine(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://sale:proba@localhost/fractalcastledb"
+db = SQLAlchemy(app)
 lm = LoginManager()
 lm.setup_app(app)
 lm.login_view = 'login'

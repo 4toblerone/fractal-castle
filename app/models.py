@@ -1,25 +1,38 @@
 from app import db
+#from flask.ext.sqlalchemy import sqlalchemy
 
-class Photo(db.EmbeddedDocument):
+
+
+class Photo(db.Model):
 	"""docstring for Photo"""
-	photoKey = db.StringField(max_length=255, required = True , unique = True)
-	name = db.StringField(max_length=255, required = False)
-	placeNumber = db.IntField(min_value = 0, required = True)
+	
+	__tablename__ = 'photo'
+	photoid = db.Column('photoid' , db.Integer, primary_key = True )
+	photokey = db.Column('photokey' , db.String(35) , primary_key = True)
+	projectkey = db.Column('projectkey', db.String , db.ForeignKey('photoproject.projectkey'))
+	name = db.Column('name' , db.String(35))
+	placenumber = db.Column('placenumber' , db.Integer)
 
-class PhotoProject(db.Document):
+class PhotoProject(db.Model):
 
-	projectKey = db.StringField(max_length = 255, required = True, unique = True)
-	name = db.StringField(required = True)
-	description = db.StringField(required = False)
-	photos = db.ListField(db.EmbeddedDocumentField(Photo))
-	published = db.BooleanField(default = False) 
-	placeNumber = db.IntField(min_value = 0, required = True)
+	__tablename__= 'photoproject'
+	projectid = db.Column('projectid',db.Integer, primary_key=True, unique= True)
+	projectkey = db.Column('projectkey',db.String(35), unique= True, primary_key = True)
+	name = db.Column('name',db.String(35))
+	description = db.Column('description',db.String(35))
+	published = db.Column('published',db.Boolean) 
+	placenumber = db.Column('placenumber',db.Integer)
+	photos = db.relationship('Photo' , lazy='dynamic')
+
+
  	
-class User(db.Document):
+class User(db.Model):	
 
-	username = db.StringField(required = True, unique = True)
-	password = db.StringField(required= True)
-	email = db.EmailField()
+	__tablename__= 'user'
+	userid = db.Column('userid' , db.Integer,primary_key=True, unique = True)
+	username = db.Column('username' , db.String(35), unique = True, primary_key=True)
+	password = db.Column('password' , db.String(35))
+	email = db.Column('email', db.String(50), unique = True)
 
 	def is_authenticated(self):
 		return True
