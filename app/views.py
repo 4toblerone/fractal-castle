@@ -170,7 +170,7 @@ def saveeditedproject():
         if photo.placenumber in photostodelete:
             db.session.delete(photo)
             db.session.commit()
-            bucket.delete_key(projectkey + "/" + photo.photoKey)
+            bucket.delete_key(projectkey + "/" + photo.photokey)
         else:
             #think about update function
             photo.placenumber = neworder.index(photo.placenumber) + 1

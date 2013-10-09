@@ -7,7 +7,7 @@ class Photo(db.Model):
 	"""docstring for Photo"""
 	
 	__tablename__ = 'photo'
-	photoid = db.Column('photoid' , db.Integer, primary_key = True )
+	#photoid = db.Column('photoid' , db.Integer, primary_key = True )
 	photokey = db.Column('photokey' , db.String(35) , primary_key = True)
 	projectkey = db.Column('projectkey', db.String , db.ForeignKey('photoproject.projectkey'))
 	name = db.Column('name' , db.String(35))
@@ -16,8 +16,8 @@ class Photo(db.Model):
 class PhotoProject(db.Model):
 
 	__tablename__= 'photoproject'
-	projectid = db.Column('projectid',db.Integer, primary_key=True, unique= True)
-	projectkey = db.Column('projectkey',db.String(35), unique= True, primary_key = True)
+	#projectid = db.Column('projectid',db.Integer, primary_key = True)
+	projectkey = db.Column('projectkey',db.String(35), primary_key = True)
 	name = db.Column('name',db.String(35))
 	description = db.Column('description',db.String(35))
 	published = db.Column('published',db.Boolean) 
