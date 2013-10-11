@@ -17,4 +17,4 @@ s3 = boto.connect_s3(aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
 bucket = s3.get_bucket("fractalcastle")
 if __name__ == '__main__':
 	app.run(debug=True)
-from app import views
+from fractalcastle.app import views
