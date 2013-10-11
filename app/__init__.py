@@ -6,7 +6,7 @@ import os
 
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object('app.config')
 app.config.from_envvar('FRACTALCASTLE_CONFIG')
 db = SQLAlchemy(app)
 lm = LoginManager()
