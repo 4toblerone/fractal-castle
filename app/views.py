@@ -238,14 +238,28 @@ def sortPhotosProjects(pplist):
 
 def returnPPPhotosUrls(projectKey):
     
-    listofphotokeys = [projectKey + "/" + photo.photokey
+    """listofphotokeys = [projectKey + "/" + photo.photokey
                        for photo in sorted(
                        PhotoProject.query.filter_by(projectkey=projectKey).first().photos,
                        key=lambda photo: photo.placenumber)]
     s3keys = [bucket.get_key(photokey)
               for photokey in listofphotokeys]
     listofphotourls = [s3key.generate_url(3600, query_auth=False,
-                                          force_http=True) for s3key in s3keys]
+                                          force_http=True) for s3key in s3keys]"""
+    listofphotourls = ['http://fractalcastle.s3.amazonaws.com/slowside/smoke',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/sunburn',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/suncream',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/spongebob',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/terace',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/sunglasses',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/windowview',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/faraway',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/cristianv',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/drink',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/hangover',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/mcdrink',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/adidas',
+                        'http://fractalcastle.s3.amazonaws.com/slowside/apocalypse']
 
     return listofphotourls
 
