@@ -28,7 +28,12 @@ def index():
 
 @app.route('/<path:projectkey>')
 def project(projectkey):
-
+    print "USAO JE U PROJECTKEY"
+    print "USAO JE U PROJECTKEY"
+    print "USAO JE U PROJECTKEY"
+    print projectkey
+    print projectkey
+    print projectkey
     photos = returnPPPhotosUrls(projectkey)
     dump =json.dumps(photos)
     return render_template("project.html", dump = dump, photosUrl=returnPPPhotosUrls(projectkey), 
