@@ -15,6 +15,9 @@ import json
 def index():
 
     #put projectkey in config 
+    print "USAO JE U INDEX"
+    print "USAO JE U INDEX"
+    print "USAO JE U INDEX"
     indexproject =  PhotoProject.query.filter_by(projectkey="indexphotos").first()
     key1= indexproject.photos[0].photokey
     for photo in indexproject.photos:
@@ -23,6 +26,7 @@ def index():
 
     key = bucket.get_key("indexphotos" + "/" + key1)
     imgurl = key.generate_url(3600, query_auth=False, force_http=True)
+    print "PRE NEGO STO UDJE U RETURN INDEX-a"
     return render_template("index.html", title='Home',
                            imgurl=imgurl, projectList=sortPhotosProjects(returnPublishedProjects()))
 
@@ -35,7 +39,11 @@ def project(projectkey):
     print projectkey
     print projectkey
     photos = returnPPPhotosUrls(projectkey)
+    print "ISPRINTAJ FOTKE"
+    print photos 
+
     dump =json.dumps(photos)
+    print "PRE NEGO STO UDJE U RETURN projectkey-a"
     return render_template("project.html", dump = dump, photosUrl=returnPPPhotosUrls(projectkey), 
                             projectList=sortPhotosProjects(returnPublishedProjects()))
 
