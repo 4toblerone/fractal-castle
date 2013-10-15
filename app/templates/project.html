@@ -9,17 +9,14 @@ Object.size = function(obj) {
         if (obj.hasOwnProperty(key)) size++;
     }
     return size;
-};
-	
+};	
 	$("#prev").fadeTo(0, 0.15);	
 	var current = 0;
-	var niz = {{photosUrl|safe}}//niz url-ova fotki
-	var size = Object.size(niz);
+	var size = {{length}}
 	var trigger= true;
 	var trigger2= false;
 	var next = $("#next");
-	var prev = $("#prev");
-	
+	var prev = $("#prev");	
 	next.click(function(event){
 		if(current < size-1){
 			if(trigger){
@@ -27,15 +24,12 @@ Object.size = function(obj) {
 				trigger=false;
 			}
 		current++
-		//$("#photo"+current).attr('class' , 'photocurrent');
-		//$("#photo"+(current-1)).attr('class' , 'photo');
 		$("#photo"+(current-1)).hide();
 		$("#photo"+current).delay(200).fadeIn(150);
 		if(current==size-1){
 				next.fadeTo(0, 0.15);
 				trigger2=true;
 			}
-		
 		}
 	event.preventDefault();
 	});
@@ -47,8 +41,6 @@ Object.size = function(obj) {
 				trigger2=false;
 			}
 			current--;
-			//$("#photo"+current).attr('class' , 'photocurrent');
-			//$("#photo"+(current+1)).attr('class' , 'photo');
 			$("#photo"+(current+1)).hide();
 		$("#photo"+current).delay(200).fadeIn(150);
 			if(current==0){

@@ -12,6 +12,7 @@ class Photo(db.Model):
 	projectkey = db.Column('projectkey', db.String , db.ForeignKey('photoproject.projectkey'))
 	name = db.Column('name' , db.String(35))
 	placenumber = db.Column('placenumber' , db.Integer)
+	photourl = db.Column('photourl', db.String)
 
 class PhotoProject(db.Model):
 

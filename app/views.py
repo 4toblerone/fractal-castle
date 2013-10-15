@@ -1,10 +1,11 @@
 from flask import render_template, flash, redirect, session, url_for, request, g, jsonify, make_response
 from forms import LoginForm, PhotoUpload, CreateProject
 from models import Photo, User, PhotoProject
-from fractalcastle.app import db, lm, s3 , bucket
+from fractalcastle.app import db, lm
 from fractalcastle.app import app2 as app
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from boto.s3.key import Key
+from s3connect import getbucket as bucket
 import inspect
 import boto
 import os
@@ -15,39 +16,16 @@ import json
 def index():
 
     #put projectkey in config 
-    print "USAO JE U INDEX"
-    print "USAO JE U INDEX"
-    print "USAO JE U INDEX"
-    indexproject =  PhotoProject.query.filter_by(projectkey="indexphotos").first()
-    key1= indexproject.photos[0].photokey
-    for photo in indexproject.photos:
-        if photo.placenumber == 1:
-            key1 = photo.photokey
-
-    key = bucket.get_key("indexphotos" + "/" + key1)
-    imgurl = key.generate_url(3600, query_auth=False, force_http=True)
-    print "PRE NEGO STO UDJE U RETURN INDEX-a"
+    imgurl =  Photo.query.filter_by(projectkey="indexphotos" , placenumber= 1).first().photourl
     return render_template("index.html", title='Home',
                            imgurl=imgurl, projectList=sortPhotosProjects(returnPublishedProjects()))
 
 @app.route('/<path:projectkey>')
 def project(projectkey):
-    print "USAO JE U PROJECTKEY"
-    print "USAO JE U PROJECTKEY"
-    print "USAO JE U PROJECTKEY"
-    print projectkey
-    print projectkey
-    print projectkey
+
     photos = returnPPPhotosUrls(projectkey)
-    print "ISPRINTAJ FOTKE"
-    print photos 
-
-    dump =json.dumps(photos)
-    print "PRE NEGO STO UDJE U RETURN projectkey-a"
-    return render_template("project.html", dump = dump, photosUrl=returnPPPhotosUrls(projectkey), 
+    return render_template("project.html", photosUrl=photos, length = len(photos),
                             projectList=sortPhotosProjects(returnPublishedProjects()))
-
-
 
 @app.before_request
 def before_request():
@@ -67,7 +45,6 @@ def login():
             return redirect('/admin')
         #else:
             #pass
-
     return render_template('login.html', title='Sign in', formcreate=form1)
 
 
@@ -80,7 +57,6 @@ def load_user(uname):
     else:
         return None
 
-
 @app.route('/logout')
 @login_required
 def logout():
@@ -88,7 +64,6 @@ def logout():
     logout_user()
     flash('You have logged out')
     return(redirect(url_for('login')))
-
 
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
@@ -107,6 +82,10 @@ def admin():
         keyname = projectkey + "/" + photoname.replace(" ", "").lower()
         key = Key(bucket)
         key.key = keyname
+        key.set_metadata("Content-Type", 'image/jpeg')
+        key.set_metadata("Cache-Control' : 'max-age=910000")
+        key.set_acl("public-read")
+
         key.set_contents_from_file(uploadedphoto)
         #creting new Photo instance and adding it to parent PhotoProject
         newphoto = Photo(photokey=photoname.replace(" ", "").lower(), 
@@ -118,7 +97,6 @@ def admin():
         #photoproject.photos.append(newphoto)
         #photoproject.save()
     return render_template('photoupload.html' , form = form_upload , listOfProjects = listOfProjects)
-
 
 @app.route('/returnproject', methods=['GET'])
 @login_required
@@ -172,13 +150,11 @@ def saveeditedproject():
     if project.photos.count() ==0:
         return jsonify({})
 
-
     neworder = [int(x) for x in request.args.get('neworder').split(',')]
     photostodelete = []
     if not request.args.get('photostodelete').strip()=="":
         photostodelete = [int(x) for x in request.args.get('photostodelete').split(',')]
     
-
     for index, photo in enumerate(sortPhotosProjects(project.photos)):
         if photo.placenumber in photostodelete:
             db.session.delete(photo)
@@ -190,7 +166,6 @@ def saveeditedproject():
             db.session.commit()
     #send message about success   
     return jsonify({})
-
 
 @app.route('/createnewproject', methods=['GET'])
 @login_required
@@ -228,7 +203,6 @@ def saveediteduser():
     else:
         return jsonify({"success": "Trenutna sifra nije identicna unetoj"})
 
-
 @app.route('/savenewuser' , methods=['GET'])
 def savenewuser():
     #do i rlly need this?
@@ -243,23 +217,13 @@ def returnProjectList():
 
     return [project.name for project in PhotoProject.query.all()]
 
-
 def sortPhotosProjects(pplist):
 
     return sorted(pplist, key=lambda pplistmember: pplistmember.placenumber)
 
-
 def returnPPPhotosUrls(projectKey):
-    
-    """listofphotokeys = [projectKey + "/" + photo.photokey
-                       for photo in sorted(
-                       PhotoProject.query.filter_by(projectkey=projectKey).first().photos,
-                       key=lambda photo: photo.placenumber)]
-    s3keys = [bucket.get_key(photokey)
-              for photokey in listofphotokeys]
-    listofphotourls = [s3key.generate_url(3600, query_auth=False,
-                                          force_http=True) for s3key in s3keys]"""
-    listofphotourls = ['http://fractalcastle.s3.amazonaws.com/slowside/smoke',
+
+    """listofphotourls = ['http://fractalcastle.s3.amazonaws.com/slowside/smoke',
                         'http://fractalcastle.s3.amazonaws.com/slowside/sunburn',
                         'http://fractalcastle.s3.amazonaws.com/slowside/suncream',
                         'http://fractalcastle.s3.amazonaws.com/slowside/spongebob',
@@ -272,7 +236,11 @@ def returnPPPhotosUrls(projectKey):
                         'http://fractalcastle.s3.amazonaws.com/slowside/hangover',
                         'http://fractalcastle.s3.amazonaws.com/slowside/mcdrink',
                         'http://fractalcastle.s3.amazonaws.com/slowside/adidas',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/apocalypse']
+                        'http://fractalcastle.s3.amazonaws.com/slowside/apocalypse']"""
+
+    listofphotourls = [photo.photourl for photo in 
+                        sorted(PhotoProject.query.filter_by(projectkey=projectKey).first().photos,
+                       key=lambda photo: photo.placenumber)]
 
     return listofphotourls
 
