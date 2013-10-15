@@ -227,21 +227,6 @@ def sortPhotosProjects(pplist):
 
 def returnPPPhotosUrls(projectKey):
 
-    """listofphotourls = ['http://fractalcastle.s3.amazonaws.com/slowside/smoke',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/sunburn',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/suncream',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/spongebob',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/terace',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/sunglasses',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/windowview',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/faraway',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/cristianv',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/drink',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/hangover',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/mcdrink',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/adidas',
-                        'http://fractalcastle.s3.amazonaws.com/slowside/apocalypse']"""
-
     listofphotourls = [photo.photourl for photo in 
                         sorted(PhotoProject.query.filter_by(projectkey=projectKey).first().photos,
                        key=lambda photo: photo.placenumber)]
