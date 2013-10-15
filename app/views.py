@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, session, url_for, request, g, jsonify, make_response
+from flask import render_template, flash, redirect, session, url_for, request, g, jsonify, make_response,send_from_directory
 from forms import LoginForm, PhotoUpload, CreateProject
 from models import Photo, User, PhotoProject
 from fractalcastle.app import db, lm
@@ -85,7 +85,6 @@ def admin():
         key.set_metadata("Content-Type", 'image/jpeg')
         key.set_metadata("Cache-Control' : 'max-age=910000")
         key.set_acl("public-read")
-
         key.set_contents_from_file(uploadedphoto)
         #creting new Photo instance and adding it to parent PhotoProject
         newphoto = Photo(photokey=photoname.replace(" ", "").lower(), 
@@ -212,6 +211,11 @@ def savenewuser():
 @app.route('/returnuser' , methods=['GET'])
 def returnuser():
     pass
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 def returnProjectList():
 
