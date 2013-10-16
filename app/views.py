@@ -86,13 +86,15 @@ def admin():
         key.set_metadata("Cache-Control" , 'max-age=910000')
         #key.set_acl('public-read')
         key.set_contents_from_file(uploadedphoto)
+        url = key.generate_url(expires_in=None, query_auth=False)
         #creting new Photo instance and adding it to parent PhotoProject
         newphoto = Photo(photokey=photoname.replace(" ", "").lower(), 
                             name=photoname, placenumber=placenumber, 
-                                projectkey=projectkey)
+                                projectkey=projectkey,photourl = url)
         #photoproject = PhotoProject.query.filter_by(projectkey=projectkey).first()
         db.session.add(newphoto)
         db.session.commit()
+        db.session.remove()
         #photoproject.photos.append(newphoto)
         #photoproject.save()
     return render_template('photoupload.html' , form = form_upload , listOfProjects = listOfProjects)
