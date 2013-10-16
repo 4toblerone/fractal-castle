@@ -219,7 +219,7 @@ def favicon():
 
 @app.teardown_appcontext
 def shutdown_session(exception = None):
-    db.session().remove()
+    db.session.remove()
 
 def returnProjectList():
 
