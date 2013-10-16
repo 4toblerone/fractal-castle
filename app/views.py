@@ -6,6 +6,7 @@ from fractalcastle.app import app2 as app
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from boto.s3.key import Key
 from s3connect import getbucket as bucket
+from sqlalchemy import exc
 import inspect
 import boto
 import os
@@ -23,7 +24,12 @@ def index():
 @app.route('/<path:projectkey>')
 def project(projectkey):
 
-    photos = returnPPPhotosUrls(projectkey)
+    attempts =0
+    for attempts in range(3):
+        try:
+            photos = returnPPPhotosUrls(projectkey)
+        except OperationalError:
+            attempts+=1
     return render_template("project.html", photosUrl=photos, length = len(photos),
                             projectList=sortPhotosProjects(returnPublishedProjects()))
 
