@@ -219,6 +219,12 @@ def favicon():
 
 @app.teardown_appcontext
 def shutdown_session(exception = None):
+    print "TEAAAAR DOWN"
+    print "TEAAAAR DOWN"
+    print "TEAAAAR DOWN"
+    print "TEAAAAR DOWN"
+    print "TEAAAAR DOWN"
+    print "TEAAAAR DOWN3"
     db.session.remove()
 
 def returnProjectList():
