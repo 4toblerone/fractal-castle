@@ -84,7 +84,7 @@ def admin():
         key.key = keyname
         key.set_metadata("Content-Type", 'image/jpeg')
         key.set_metadata("Cache-Control" , 'max-age=910000')
-        key.set_acl("public-read")
+        key.set_acl('public-read')
         key.set_contents_from_file(uploadedphoto)
         #creting new Photo instance and adding it to parent PhotoProject
         newphoto = Photo(photokey=photoname.replace(" ", "").lower(), 
