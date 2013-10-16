@@ -28,7 +28,7 @@ def project(projectkey):
     for attempts in range(3):
         try:
             photos = returnPPPhotosUrls(projectkey)
-        except OperationalError:
+        except exc.OperationalError:
             attempts+=1
     return render_template("project.html", photosUrl=photos, length = len(photos),
                             projectList=sortPhotosProjects(returnPublishedProjects()))
