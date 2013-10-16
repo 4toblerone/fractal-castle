@@ -6,6 +6,7 @@ from fractalcastle.app import app2 as app
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from boto.s3.key import Key
 from s3connect import getbucket as bucket
+from sqlalchemy import exc
 import inspect
 import boto
 import os
@@ -22,8 +23,15 @@ def index():
 
 @app.route('/<path:projectkey>')
 def project(projectkey):
+    attempt = 0
+    for attempt in range(3):
+        try:
+            photos = returnPPPhotosUrls(projectkey)
+            break
+        except exc.OperationalError:
+            db.session.rollback()
+            attempt+=1
 
-    photos = returnPPPhotosUrls(projectkey)
     return render_template("project.html", photosUrl=photos, length = len(photos),
                             projectList=sortPhotosProjects(returnPublishedProjects()))
 
@@ -80,23 +88,20 @@ def admin():
         placenumber = PhotoProject.query.filter_by(projectkey = projectkey).first().photos.count() + 1
         #seting key and data for amazon S3
         keyname = projectkey + "/" + photoname.replace(" ", "").lower()
-        key = Key(bucket)
+        key = Key(bucket())
         key.key = keyname
         key.set_metadata("Content-Type", 'image/jpeg')
         key.set_metadata("Cache-Control" , 'max-age=910000')
         #key.set_acl('public-read')
         key.set_contents_from_file(uploadedphoto)
-        url = key.generate_url(expires_in=None, query_auth=False)
+        key.set_acl('public-read')
+        url = key.generate_url(0, query_auth=False, force_http = True)
         #creting new Photo instance and adding it to parent PhotoProject
         newphoto = Photo(photokey=photoname.replace(" ", "").lower(), 
                             name=photoname, placenumber=placenumber, 
                                 projectkey=projectkey,photourl = url)
-        #photoproject = PhotoProject.query.filter_by(projectkey=projectkey).first()
         db.session.add(newphoto)
         db.session.commit()
-        db.session.remove()
-        #photoproject.photos.append(newphoto)
-        #photoproject.save()
     return render_template('photoupload.html' , form = form_upload , listOfProjects = listOfProjects)
 
 @app.route('/returnproject', methods=['GET'])
