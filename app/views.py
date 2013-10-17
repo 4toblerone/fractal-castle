@@ -17,7 +17,15 @@ import json
 def index():
 
     #put projectkey in config 
-    imgurl =  Photo.query.filter_by(projectkey="indexphotos" , placenumber= 1).first().photourl
+    attempt = 0
+    for attempt in range(3):
+        try:
+            imgurl =  Photo.query.filter_by(projectkey="indexphotos" , placenumber= 1).first().photourl
+            break
+        except exc.OperationalError:
+            db.session.rollback()
+            attempt+=1
+    #imgurl =  Photo.query.filter_by(projectkey="indexphotos" , placenumber= 1).first().photourl
     return render_template("index.html", title='Home',
                            imgurl=imgurl, projectList=sortPhotosProjects(returnPublishedProjects()))
 
