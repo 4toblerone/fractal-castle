@@ -55,11 +55,11 @@ Object.size = function(obj) {
 	$(document).keydown(function(e) {
     switch(e.which) {
         case 37: // left
-        moveleft();
+        moveleft(e);
         break;
 
         case 39: // right
-        moveright();
+        moveright(e);
         break;
 
         default: return; // exit this handler for other keys
