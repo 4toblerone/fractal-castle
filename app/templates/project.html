@@ -17,7 +17,8 @@ Object.size = function(obj) {
 	var trigger2= false;
 	var next = $("#next");
 	var prev = $("#prev");	
-	next.click(function(event){
+
+	var moveright =function(event){
 		if(current < size-1){
 			if(trigger){
 				prev.fadeTo(0, 1);
@@ -32,9 +33,9 @@ Object.size = function(obj) {
 			}
 		}
 	event.preventDefault();
-	});
+	}
 
-	$("#prev").click(function(event){
+	var moveleft = function(event){
 		if(current > 0){
 			if(trigger2){
 				next.fadeTo(0,1);
@@ -49,7 +50,25 @@ Object.size = function(obj) {
 			}
 		}
 		event.preventDefault();
-	});
+	}
+
+	$(document).keydown(function(e) {
+    switch(e.which) {
+        case 37: // left
+        moveleft();
+        break;
+
+        case 39: // right
+        moveright();
+        break;
+
+        default: return; // exit this handler for other keys
+    }
+    e.preventDefault(); 
+});
+
+	next.click(moveright);
+	prev.click(moveleft);
 
 });
 </script>

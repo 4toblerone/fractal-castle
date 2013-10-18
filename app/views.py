@@ -17,6 +17,7 @@ import json
 def index():
 
     #put projectkey in config 
+    #make decorator madafaka!
     attempt = 0
     for attempt in range(3):
         try:
@@ -31,6 +32,8 @@ def index():
 
 @app.route('/<path:projectkey>')
 def project(projectkey):
+
+    #make decorator!
     attempt = 0
     for attempt in range(3):
         try:
@@ -117,6 +120,7 @@ def admin():
 def returnproject():
     #this should be refactored so that only give list of photos urls
     #so the rest of the element injection should happen on javascript side
+    #put this big ass "portion" string outside views
     projectkey = request.args.get('projectkey')
     project = PhotoProject.query.filter_by(projectkey=projectkey).first()
     listofphotourls = returnPPPhotosUrls(projectkey)
@@ -234,12 +238,6 @@ def favicon():
 
 @app.teardown_appcontext
 def shutdown_session(exception = None):
-    print "TEAAAAR DOWN"
-    print "TEAAAAR DOWN"
-    print "TEAAAAR DOWN"
-    print "TEAAAAR DOWN"
-    print "TEAAAAR DOWN"
-    print "TEAAAAR DOWN3"
     db.session.remove()
 
 def returnProjectList():
