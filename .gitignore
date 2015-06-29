@@ -39,3 +39,6 @@ nosetests.xml
 
 virtualenv.py
 *.pyc
+
+fractal-castle.iml
+.idea
