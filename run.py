@@ -1,2 +1,3 @@
-from fractalcastle.app import app2
-app2.run(debug  = True)
+from app import app2
+
+app2.run(debug=True)
