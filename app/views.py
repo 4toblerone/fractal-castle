@@ -1,16 +1,18 @@
+import os
+
 from flask import (render_template, flash, redirect,
                    url_for, request, g, jsonify, send_from_directory)
+from flask.ext.login import login_user, logout_user, current_user, login_required
+from boto.s3.key import Key
+
+from sqlalchemy import exc
+
 from forms import LoginForm, PhotoUpload
-from models import Photo, User, PhotoProject
+from app.models import Photo, User, PhotoProject
 from app import lm
 from app import Session
 from app import app2 as app
-from flask.ext.login import login_user, logout_user, current_user, login_required
-from boto.s3.key import Key
 from s3connect import getbucket as bucket
-from sqlalchemy import exc
-
-import os
 
 
 @app.route('/')
