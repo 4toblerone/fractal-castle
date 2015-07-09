@@ -8,7 +8,7 @@ from boto.s3.key import Key
 from sqlalchemy import exc
 
 from forms import LoginForm, PhotoUpload
-from app.models import Photo, User, PhotoProject
+from app.models import Photo, User, PhotoProject, Page
 from app import lm
 from app import Session
 from app import app2 as app
@@ -29,7 +29,7 @@ def index():
         except exc.OperationalError:
             db.rollback()
             attempt += 1
-    imgurl = db.query(Photo).filter_by(projectkey="indexphotos" , placenumber= 1).first().photourl
+    imgurl = db.query(Photo).filter_by(projectkey="indexphotos", placenumber=1).first().photourl
     return render_template("index.html", title='Home',
                            imgurl=imgurl, projectList=sortPhotosProjects(returnPublishedProjects()))
 
@@ -63,7 +63,7 @@ def login():
     if form1.validate_on_submit():
         # check if user with that credentials exists
         user = db.query(User).filter_by(username=form1.username.data,
-                                    password=form1.password.data).first()
+                                        password=form1.password.data).first()
         if user:
             login_user(user)
             flash("Logged in successfully")
@@ -232,8 +232,8 @@ def saveediteduser():
     db = Session()
     if g.user.password == request.args.get('oldpass'):
         db.query(User).filter_by(username=g.user.username).update(dict(username=request.args.get('newusername'),
-                                                                   password=request.args.get('newpass'),
-                                                                   email=request.args.get('newemail')))
+                                                                       password=request.args.get('newpass'),
+                                                                       email=request.args.get('newemail')))
         return jsonify({"success": "Novi podaci su uspesno sacuvani"})
     else:
         return jsonify({"success": "Trenutna sifra nije identicna unetoj"})
@@ -259,9 +259,9 @@ def favicon():
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
-
-    #db.session.remove()
+    # db.session.remove()
     pass
+
 
 def returnProjectList():
     db = Session()
@@ -285,6 +285,38 @@ def returnPublishedProjects():
     db = Session()
     return [project for project in db.query(PhotoProject).all() if project.published == True]
 
+
+def get_pages(frm=0, to=1):
+    try:
+        db = Session()
+        pages = db.query(Page).filter(Page.page_num.between(frm, to))
+        return pages
+    except exc.OperationalError:
+        try:
+            db.rollback()
+        except Exception:
+            pass
+
+
+def add_obj(object):
+    db = Session()
+    try:
+        db.add(object)
+        db.commit()
+        return object
+    except exc.OperationalError:
+        try:
+            db.rollback()
+        except Exception:
+            pass
+
+
+def photo_to_page(photo, page):
+    photo.projectkey = 'back-yard'
+
+
 @app.route('/back-yard')
 def back_yard():
-    return "BACK YARD"
+    # return first two pages
+
+    return render_template('backyard.html')
