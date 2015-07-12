@@ -274,8 +274,9 @@ def sortPhotosProjects(pplist):
 
 def returnPPPhotosUrls(projectKey):
     db = Session()
+    photos = db.query(Photo).filter_by(projectkey=projectKey).all()
     listofphotourls = [photo.photourl for photo in
-                       sorted(db.query(PhotoProject).filter_by(projectkey=projectKey).first().photos,
+                       sorted(photos,
                               key=lambda photo: photo.placenumber)]
 
     return listofphotourls
