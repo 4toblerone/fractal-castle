@@ -41,7 +41,7 @@ def upgrade():
     op.execute('''UPDATE photo INNER JOIN photoproject ON photo.projectkey = photoproject.projectkey SET photo.pproject_id = photoproject.id''')
 
     # add foreign key to photo
-
+    op.execute('''ALTER TABLE photo ADD CONSTRAINT fk_ppoject_id FOREIGN KEY (pproject_id) REFERENCES photoproject(id)''')
     op.execute('''ALTER TABLE user DROP PRIMARY KEY ''')
     op.execute('''
       ALTER TABLE user ADD COLUMN id
