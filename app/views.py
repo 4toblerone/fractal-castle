@@ -41,6 +41,7 @@ def project(projectkey):
     attempt = 0
     for attempt in range(3):
         try:
+            photos = db.query(Photo).filter_by(projectkey=projectkey).all()
             photos = returnPPPhotosUrls(projectkey)
             break
         except exc.OperationalError:

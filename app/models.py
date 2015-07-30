@@ -13,16 +13,17 @@ class Photo(Base):
     __tablename__ = 'photo'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     photokey = Column('photokey', String(35),  nullable=False)
-    projectkey = Column('projectkey', String, ForeignKey('photoproject.projectkey'), nullable=False)
+    # projectkey = Column('projectkey', String, ForeignKey('photoproject.projectkey'), nullable=False)
     name = Column('name', String(35), nullable=False)
     placenumber = Column('placenumber', Integer, nullable=False)
     photourl = Column('photourl', String, nullable=False)
+    p_project_id = Column('pproject_id', Integer, ForeignKey('photoproject.id'), nullable=False)
 
 
 class PhotoProject(Base):
     __tablename__ = 'photoproject'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
-    projectkey = Column('projectkey', String(35), primary_key=True)
+    projectkey = Column('projectkey', String(35), nullable=False)
     name = Column('name', String(35), nullable=False)
     description = Column('description', String(35), nullable=False, default='')
     published = Column('published', Boolean, nullable=False)
@@ -61,7 +62,7 @@ class Position(Base):
 class User(Base):
     __tablename__ = 'user'
     id = Column('id', Integer, primary_key=True, unique=True)
-    username = Column('username', String(35), unique=True, primary_key=True, nullable=False)
+    username = Column('username', String(35), unique=True, nullable=False)
     password = Column('password', String(35), nullable=False)
     email = Column('email', String(50), unique=True, nullable=False)
 
