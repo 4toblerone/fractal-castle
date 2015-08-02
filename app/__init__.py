@@ -9,7 +9,7 @@ app2 = Flask(__name__)
 app2.config.from_envvar('FRACTALCASTLE_CONFIG')
 app2.debug = True
 # create string from config file
-DB_STRING = 'mysql+mysqldb://root:admin@localhost/fc_test'
+DB_STRING = 'mysql+mysqldb://root:admin@localhost/fc_test_3'
 engine = create_engine(DB_STRING)
 Session = sessionmaker(bind=engine)
 # Base = declarative_base()

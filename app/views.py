@@ -21,33 +21,34 @@ def index():
     # put projectkey in config
     # make decorator madafaka!
     db = Session()
-    attempt = 0
+    # attempt = 0
     for attempt in range(3):
         try:
-            imgurl = db.query(Photo).filter_by(projectkey="indexphotos", placenumber=1).first().photourl
+            imgurl = (db.query(Photo).join(PhotoProject)
+                        .filter(PhotoProject.projectkey == "indexphotos")
+                        .filter(Photo.placenumber == 1)
+                        .first()
+                        .photourl)
             break
         except exc.OperationalError:
             db.rollback()
             attempt += 1
-    imgurl = db.query(Photo).filter_by(projectkey="indexphotos", placenumber=1).first().photourl
     return render_template("index.html", title='Home',
                            imgurl=imgurl, projectList=sortPhotosProjects(returnPublishedProjects()))
-
 
 @app.route('/<path:projectkey>')
 def project(projectkey):
     # make decorator!
     db = Session()
-    attempt = 0
+    # attempt = 0
     for attempt in range(3):
         try:
-            photos = db.query(Photo).filter_by(projectkey=projectkey).all()
+            photos = db.query(PhotoProject).filter_by(projectkey=projectkey).first().photos
             photos = returnPPPhotosUrls(projectkey)
             break
         except exc.OperationalError:
             db.session.rollback()
             attempt += 1
-
     return render_template("project.html", photosUrl=photos, length=len(photos),
                            projectList=sortPhotosProjects(returnPublishedProjects()))
 
@@ -132,9 +133,10 @@ def returnproject():
     # put this big ass "portion" string outside views
     db = Session()
     projectkey = request.args.get('projectkey')
-    project = db.query(PhotoProject).filter_by(projectkey=projectkey).first()
+    #project = db.query(PhotoProject).filter_by(projectkey=projectkey).first()
     listofphotourls = returnPPPhotosUrls(projectkey)
     portion = ""
+    # create html (jinja) template and fill it
     for index, url in enumerate(listofphotourls):
         portion += "<li id=" + str(
             index + 1) + "> <img src=" + url + " width='200' height='150'></img><input type = 'checkbox' class='checkbox' value='" + str(
@@ -232,9 +234,11 @@ def saveediteduser():
     # save edited user
     db = Session()
     if g.user.password == request.args.get('oldpass'):
-        db.query(User).filter_by(username=g.user.username).update(dict(username=request.args.get('newusername'),
-                                                                       password=request.args.get('newpass'),
-                                                                       email=request.args.get('newemail')))
+        db.query(User)\
+          .filter_by(username=g.user.username)\
+          .update(dict(username=request.args.get('newusername'),
+                       password=request.args.get('newpass'),
+                       email=request.args.get('newemail')))
         return jsonify({"success": "Novi podaci su uspesno sacuvani"})
     else:
         return jsonify({"success": "Trenutna sifra nije identicna unetoj"})
@@ -275,11 +279,11 @@ def sortPhotosProjects(pplist):
 
 def returnPPPhotosUrls(projectKey):
     db = Session()
-    photos = db.query(Photo).filter_by(projectkey=projectKey).all()
+    # photos = db.query(Photo).filter_by(projectkey=projectKey).all()
+    photos = db.query(PhotoProject).filter_by(projectkey=projectKey).first().photos
     listofphotourls = [photo.photourl for photo in
                        sorted(photos,
                               key=lambda photo: photo.placenumber)]
-
     return listofphotourls
 
 

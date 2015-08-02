@@ -17,7 +17,7 @@ class Photo(Base):
     name = Column('name', String(35), nullable=False)
     placenumber = Column('placenumber', Integer, nullable=False)
     photourl = Column('photourl', String, nullable=False)
-    p_project_id = Column('pproject_id', Integer, ForeignKey('photoproject.id'), nullable=False)
+    pproject_id = Column('pproject_id', Integer, ForeignKey('photoproject.id'), nullable=False)
 
 
 class PhotoProject(Base):
@@ -28,7 +28,7 @@ class PhotoProject(Base):
     description = Column('description', String(35), nullable=False, default='')
     published = Column('published', Boolean, nullable=False)
     placenumber = Column('placenumber', Integer, nullable=False,)
-    photos = relationship('Photo', lazy='dynamic')
+    photos = relationship('Photo', backref='photo')
 
 
 class Page(Base):
