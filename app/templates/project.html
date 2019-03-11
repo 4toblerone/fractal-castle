@@ -3,6 +3,17 @@
 {{super()}}
 <script type="text/javascript">
 $(document).ready(function(){
+
+function addClass (photo) {
+    if (photo.width() > photo.height()) {
+        photo.addClass('sira');
+        photo.remove('duza');
+    } else {
+        photo.addClass('duza');
+        photo.removeClass('sira');
+    }
+}
+
 Object.size = function(obj) {
     var size = 0, key;
     for (key in obj) {
@@ -16,7 +27,12 @@ Object.size = function(obj) {
 	var trigger= true;
 	var trigger2= false;
 	var next = $("#next");
-	var prev = $("#prev");	
+	var prev = $("#prev");
+
+	$("#photo0").load(function() {
+	    var $this = $(this);
+	    addClass($this);
+    });
 
 	var moveright =function(event){
 		if(current < size-1){
@@ -26,7 +42,9 @@ Object.size = function(obj) {
 			}
 		current++
 		$("#photo"+(current-1)).hide();
-		$("#photo"+current).delay(200).fadeIn(150);
+		var photo = $("#photo"+current);
+        addClass(photo);
+		photo.delay(200).fadeIn(150);
 		if(current==size-1){
 				next.fadeTo(0, 0.15);
 				trigger2=true;
@@ -82,15 +100,11 @@ Object.size = function(obj) {
       {% endblock %}
 {% block display %}
 <div class="photo-wrapper">
-	<div id="photoholder" style='position: relative'>
+	<div id="photoholder">
 		<img id="photo0" class="photocurrent" src ={{photosUrl[0]}} > </img>
 		{% for url in photosUrl[1:]%}
 		<img id='photo{{loop.index}}' src="{{url}}" class="photo" ></img>
 		{% endfor %}
 	</div>
 </div>
-<ul>
- <li></li>
-</ul>
-
 {%endblock%}

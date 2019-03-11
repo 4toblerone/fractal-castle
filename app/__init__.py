@@ -5,7 +5,6 @@ import boto
 import os
 
 
-#app = Flask(__name__)
 app2 = Flask(__name__)
 app2.config.from_envvar('FRACTALCASTLE_CONFIG')
 app2.debug=True
@@ -19,5 +18,5 @@ lm.login_view = 'login'
 if __name__ == '__main__':
 	app2.run(debug=True)
 	
-from fractalcastle.app import views
+from app import views
 

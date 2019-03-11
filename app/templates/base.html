@@ -12,13 +12,16 @@
   </head>
   <body>
     <div class="container clearfix">
-      <header class="clearfix">
-        <h1><a href="/"><span>fractal</span>castle</a></h1>
-      {% block pronav %}
-      {% endblock %}
-      </header>  
-    {% block content %}
-    {% endblock %}
+        <header class="clearfix">
+            <h1><a href="/"><span>fractal</span>castle</a></h1>
+            {% block pronav %}
+            {% endblock %}
+        </header>
+        <div class="content-wrapper">
+            {% block content %}
+            {% endblock %}
+            <div class="padding-div"></div>
+        </div>
     </div>
   </body>
 </html>

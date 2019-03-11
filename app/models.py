@@ -1,4 +1,4 @@
-from fractalcastle.app import db
+from app import db
 #from flask.ext.sqlalchemy import sqlalchemy
 
 

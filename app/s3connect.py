@@ -1,5 +1,5 @@
 import boto
-from fractalcastle.app import app2
+from app import app2
 
 
 def getbucket():
