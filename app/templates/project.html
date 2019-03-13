@@ -6,6 +6,12 @@ $(document).ready(function(){
 
 function addClass (photo) {
     if (photo.width() > photo.height()) {
+        // hack ukoliko je format 4 x 5
+        if(photo.width() / photo.height() < 1.4){
+            photo.addClass('duza');
+            photo.removeClass('sira');
+            return;
+        }
         photo.addClass('sira');
         photo.remove('duza');
     } else {
