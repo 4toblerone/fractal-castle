@@ -18,5 +18,5 @@ lm.login_view = 'login'
 if __name__ == '__main__':
 	app2.run(debug=True)
 	
-from app import views
+from fractalcastle.app import views
 

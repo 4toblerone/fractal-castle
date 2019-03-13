@@ -1,8 +1,8 @@
 from flask import render_template, flash, redirect, session, url_for, request, g, jsonify, make_response,send_from_directory
 from forms import LoginForm, PhotoUpload, CreateProject
 from models import Photo, User, PhotoProject
-from app import db, lm
-from app import app2 as app
+from fractalcastle.app import db, lm
+from fractalcastle.app import app2 as app
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from boto.s3.key import Key
 from s3connect import getbucket as bucket
