@@ -1,11 +1,21 @@
-{% extends "base.html"%}
-{% block head %}
-{{super()}}
-<script type="text/javascript" src="{{url_for('static', filename='admin.js') }}"></script>
-<script src="{{url_for('static', filename='jquery-ui.js') }}"></script>
-{% endblock %}
-{%block content%}
+<html>
+<head>
+    {% block head %}
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css') }}">
+        <link href='http://fonts.googleapis.com/css?family=Wire+One' rel='stylesheet' type='text/css'>
 
+        <script type=text/javascript src="{{url_for('static', filename='jquerymini.js') }}"></script>
+        <!--<script src="{{url_for('static', filename='jquery-ui.js') }}"></script>-->
+        <script src="{{url_for('static', filename='custom.js') }}"></script>
+        <title>Fractal Castle</title>
+    {% endblock%}
+</head>
+<body>
+<header class="clearfix">
+    <h1><a href="/"><span>fractal</span>castle</a></h1>
+    {% block pronav %}
+    {% endblock %}
+</header>
 
 
 <h1 id="editproject" class="adminmeni">Edit project</h1>
@@ -95,7 +105,8 @@
   <input type="button" id="saveuser" >Sacuvaj nove podatke</button>
 </div>
 
-{%endblock%}
+</body>
+</html>
 
 <!--<input type="file" id="fileToUpload"/><br/>
 <div id="progressbar"></div>
