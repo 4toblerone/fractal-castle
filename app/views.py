@@ -7,10 +7,7 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from boto.s3.key import Key
 from s3connect import getbucket as bucket
 from sqlalchemy import exc
-import inspect
-import boto
 import os
-import json
 
 @app.route('/')
 @app.route('/index')
@@ -23,7 +20,8 @@ def index():
         try:
             imgurl =  Photo.query.filter_by(projectkey="indexphotos" , placenumber= 1).first().photourl
             break
-        except exc.OperationalError:
+        except exc.OperationalError as e:
+            app.logger.error(str(e))
             db.session.rollback()
             attempt+=1
     #imgurl =  Photo.query.filter_by(projectkey="indexphotos" , placenumber= 1).first().photourl
@@ -39,7 +37,8 @@ def project(projectkey):
         try:
             photos = returnPPPhotosUrls(projectkey)
             break
-        except exc.OperationalError:
+        except exc.OperationalError as e:
+            app.logger.error(str(e))
             db.session.rollback()
             attempt+=1
 

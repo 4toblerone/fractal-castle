@@ -1,2 +1,2 @@
 from fractalcastle.app import app2
-app2.run(debug  = True)
+app2.run(debug=False)
