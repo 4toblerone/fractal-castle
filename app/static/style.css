@@ -44,19 +44,21 @@ a:hover{
 	color: gray;
 }
 
-.container{
-	display: flex;
-	flex-direction: column;
-	max-width: 1360px;
-	max-height: 100%;
-	height: 100%;
-	margin: 0 auto;
-	overflow: hidden;
-}
+/*.container{*/
+	/*display: flex;*/
+	/*flex-direction: column;*/
+	/*max-width: 1360px;*/
+	/*max-height: 100%;*/
+	/*height: 100%;*/
+	/*margin: 0 auto;*/
+	/*overflow: hidden;*/
+/*}*/
 
 .content-wrapper {
 	display: flex;
 	flex-direction: row;
+	height: 0;
+	flex: 1 1 100%;
 }
 
 header {
@@ -151,13 +153,13 @@ nav ul li.contact-content a img:hover{
 	opacity: 1;
 }
 
-.photo-wrapper{
-	display: flex;
-	flex-grow: 1;
-	justify-content: center;
-	height: 100%;
-	width: 100%;
-}
+/*.photo-wrapper{*/
+	/*display: flex;*/
+	/*flex-grow: 1;*/
+	/*justify-content: center;*/
+	/*height: 100%;*/
+	/*width: 100%;*/
+/*}*/
 
 
 .photo{
@@ -189,16 +191,16 @@ nav {
 	min-width: 180px;
 }
 
-#photoholder {
-	display: flex;
-	flex: 1;
-	align-items: start;
-	justify-content: center
-}
+/*#photoholder {*/
+	/*display: flex;*/
+	/*flex: 1;*/
+	/*align-items: start;*/
+	/*justify-content: center*/
+/*}*/
 
-#photoholder img {
-	flex: 0;
-}
+/*#photoholder img {*/
+	/*flex: 0;*/
+/*}*/
 
 #photoholder img.duza {
 	width: auto;
@@ -216,4 +218,38 @@ nav {
 .padding-div {
 	flex: 1;
 	max-height: 10px;
+}
+
+.container {
+	flex: 1 1 100%;
+	display: flex;
+	flex-direction: column;
+	padding: 0 50px;
+}
+
+.photo-wrapper{
+	flex: 1 1 100%;
+}
+
+#photoholder {
+	box-sizing: border-box;
+	width: 100%;
+}
+
+#photoholder img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	object-position: 50% 0;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	display: flex;
+	height: 100vh;
+	box-sizing: border-box;
+	padding-bottom: 20px;
 }
